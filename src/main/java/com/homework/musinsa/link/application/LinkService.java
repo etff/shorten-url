@@ -27,15 +27,15 @@ public class LinkService {
      * @param originalLink 원본 링크 정보
      * @return 단축 링크 정보
      */
-    public LinkResponseDto createShortUrl(final String originalLink) {
+    public String createShortUrl(final String originalLink) {
         final String id = Hashing.murmur3_32().hashString(originalLink, StandardCharsets.UTF_8).toString();
         Optional<Link> findLink = linkRepository.findById(id);
         if (findLink.isPresent()) {
             Link savedLink = linkRepository.save(findLink.get().updateCount());
-            return new LinkResponseDto(savedLink.getKey());
+            return savedLink.getKey();
         }
         final Link savedLink = linkRepository.save(Link.generateLink(id, originalLink));
-        return new LinkResponseDto(savedLink.getKey());
+        return savedLink.getKey();
     }
 
     /**

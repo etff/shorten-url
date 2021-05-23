@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -18,14 +19,17 @@ import java.net.URI;
 @RestController
 @RequiredArgsConstructor
 public class LinkRestController {
+    public static final String SLASH = "/";
     private final LinkService linkService;
 
     @PostMapping("/link")
     public ResponseEntity<LinkResponseDto> createShortUrl(
             @RequestBody @Valid LinkRequestDto dto) {
-        LinkResponseDto shortUrl = linkService.createShortUrl(dto.getLink());
-        return ResponseEntity.created(URI.create("/" + shortUrl.getLink()))
-                .body(shortUrl);
+        final String baseUrl =
+                ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        final String shortUrl = linkService.createShortUrl(dto.getLink());
+        return ResponseEntity.created(URI.create(SLASH + shortUrl))
+                .body(new LinkResponseDto(baseUrl + SLASH + shortUrl));
     }
 
     @GetMapping("{key}")

@@ -28,19 +28,19 @@ class LinkServiceTest {
         final String input = "https://www.google.com";
 
         // when
-        LinkResponseDto shortUrl = linkService.createShortUrl(input);
+        String shortUrl = linkService.createShortUrl(input);
         // then
-        assertThat(shortUrl.getLink().length()).isEqualTo(8);
+        assertThat(shortUrl.length()).isEqualTo(8);
     }
 
     @Test
     void findOriginalLink() {
         // given
         final String input = "https://www.google.com";
-        LinkResponseDto shortUrl = linkService.createShortUrl(input);
+        String shortUrl = linkService.createShortUrl(input);
 
         // when
-        LinkResponseDto actual = linkService.getOriginalLink(shortUrl.getLink());
+        LinkResponseDto actual = linkService.getOriginalLink(shortUrl);
 
         // then
         assertThat(actual.getLink()).isEqualTo(input);

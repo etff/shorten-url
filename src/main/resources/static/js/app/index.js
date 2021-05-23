@@ -5,6 +5,11 @@ var main = {
         $("#send").on("click", function () {
             _this.send();
         });
+        $("#link").on('keyup', function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                _this.send();
+            }
+        });
     },
 
     send: function () {
@@ -20,10 +25,10 @@ var main = {
             data: JSON.stringify(param)
         }).done(function (data) {
             var result = data;
-            $("#result").html(`생성된 단축 URL은  ${result.link} 입니다.`);
+            $("#result").html(`<h2>생성된 단축 URL은 <a href="${result.link}">${result.link} </a> 입니다.</h2>`);
 
         }).fail(function (error) {
-            alert(error.responseJSON.message);
+            alert("오류가 발생했습니다");
         });
     }
 };
