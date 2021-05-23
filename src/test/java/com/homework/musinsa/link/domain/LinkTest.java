@@ -8,7 +8,7 @@ class LinkTest {
 
     @Test
     void canCreate() {
-        Link link = new Link("google", "https://www.google.com");
+        Link link = new Link("google", "https://www.google.com", 0);
 
         assertThat(link).isNotNull();
     }

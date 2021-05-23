@@ -1,17 +1,22 @@
 package com.homework.musinsa.link.application;
 
+import com.google.common.hash.Hashing;
 import com.homework.musinsa.link.domain.Link;
 import com.homework.musinsa.link.dto.LinkResponseDto;
 import com.homework.musinsa.link.infra.LinkRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 /**
  * 링크 정보를 다룬다.
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LinkService {
     public static final String NOT_VALID_LINK_KEY = "잘못된 링크 입력입니다";
     private final LinkRepository linkRepository;
@@ -19,12 +24,17 @@ public class LinkService {
     /**
      * 단축 URL을 생성한다./
      *
-     * @param link 원본 링크 정보
+     * @param originalLink 원본 링크 정보
      * @return 단축 링크 정보
      */
-    public LinkResponseDto createShortUrl(final String link) {
-        final String key = RandomStringUtils.randomAlphabetic(8);
-        final Link savedLink = linkRepository.save(new Link(key, link));
+    public LinkResponseDto createShortUrl(final String originalLink) {
+        final String id = Hashing.murmur3_32().hashString(originalLink, StandardCharsets.UTF_8).toString();
+        Optional<Link> findLink = linkRepository.findById(id);
+        if (findLink.isPresent()) {
+            Link savedLink = linkRepository.save(findLink.get().updateCount());
+            return new LinkResponseDto(savedLink.getKey());
+        }
+        final Link savedLink = linkRepository.save(Link.generateLink(id, originalLink));
         return new LinkResponseDto(savedLink.getKey());
     }
 
