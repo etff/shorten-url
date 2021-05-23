@@ -45,6 +45,9 @@ public class LinkService {
      * @return 원본 링크 정보
      */
     public LinkResponseDto getOriginalLink(final String key) {
+        if (key == null || key.isEmpty()) {
+            throw new LinkNotFoundException(NOT_VALID_LINK_KEY);
+        }
         final Link link = linkRepository.findById(key)
                 .orElseThrow(() -> new LinkNotFoundException(NOT_VALID_LINK_KEY));
         return new LinkResponseDto(link.getOriginalLink());
