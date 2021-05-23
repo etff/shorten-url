@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("LinkController 클래스")
-class LinkControllerTest {
+class LinkRestControllerTest {
     private static final String LINK_URL = "https://www.google.com";
     private static final String NOT_EXIST_LINK_URL = LINK_URL + "_NOT_EXIST";
     private static final String SHORT_URL = "fBXbFrVV";

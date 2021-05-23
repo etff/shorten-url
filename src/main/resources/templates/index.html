@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/header"></head>
+<body>
+<div class="container">
+    <h1>단축 URL</h1>
+    <br/>
+    <form th:action="@{/result}" th:object="${link}" method="post">
+        <input hidden="hidden"/>
+        <p>링크 주소: <input type="text" th:field="*{link}"/></p>
+        <button type="button" id="send" value="Submit" class="btn-primary"/>
+        Submit</button>
+    </form>
+    <br/>
+    <h2 id="result"></h2>
+    <div th:replace="fragment/footer"/>
+</div>
+</body>
+</html>
