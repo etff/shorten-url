@@ -5,6 +5,10 @@
 * URL을 입력받아 짧게 줄여주고, Shortening된 URL을 입력하면 원래 URL로 리다이렉트하는 URL Shortening Service
 * 예) https://en.wikipedia.org/wiki/URL_shortening => http://localhost/JZfOQNro
 
+## 실행 방법
+
+* 별도의 설치는 필요하지않으며, 실행 후 http://localhost:8080 으로 접속하여 단축 URL을 생성할 수 있습니다.
+
 ## 요구 사항
 
 - 링크
@@ -15,3 +19,7 @@
   - [X] Shortening된 URL을 요청받으면 원래 URL로 리다이렉트 합니다.
 
 * Database 사용은 필수 아님
+
+## 개발 환경
+
+* Spring Boot, Redis, Java
