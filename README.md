@@ -37,8 +37,9 @@
 - REDIS를 쓴 것은 단축 URL을 빠르게 전달하는 것이 서비스의 가장 첫 목표라고 생각했기떄문입니다.
 - 동일한 키 값 보장을 위해 Hash 알고리즘을 고려하였습니다.
 - 키 생성은 murmur3 hash function을 사용했습니다. 서칭해본 결과 hash function
-  중에 [좋은 성능](https://docs.google.com/spreadsheets/d/1_q2EVcxA2HjcrlVMbaqXwMj31h9M5-Bqj_m8vITOwwk/edit#gid=0)   
-  을 보이고, 자바 hashmap에서 사용하는 것처럼 실례에서 많이 쓰이는 hash 알고리즘입니다. 조회에서 좋은 성능을 보여줍니다.
+  중에 [좋은 성능](https://docs.google.com/spreadsheets/d/1_q2EVcxA2HjcrlVMbaqXwMj31h9M5-Bqj_m8vITOwwk/edit#gid=0)
+  , [링크](https://www.sderosiaux.com/articles/2017/08/26/the-murmur3-hash-function--hashtables-bloom-filters-hyperloglog/)   
+  을 보이고, 자바 hashmap에서 사용하는 것처럼 실례에서 많이 쓰이는 hash 알고리즘입니다.
 - 키 제약사항이 적다면 길이를 더 길게하여 충돌을 줄일 수 있을 것 같습니다.
 
 ## REST API
@@ -70,7 +71,7 @@
 
 - http://localhost:8080/4170157c
 
-2. DIRECTION 처리
+2. REDIRECTION 처리
 
 ## 개발 환경
 
