@@ -47,7 +47,7 @@
 - 단축 URL 생성
 
 1. POST
-  - http:localhost:8080/link
+  - http://localhost:8080/link
 2. Request
 
 ```json
