@@ -27,9 +27,9 @@ public class LinkRestController {
             @RequestBody @Valid LinkRequestDto dto) {
         final String baseUrl =
                 ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        final String shortUrl = linkService.createShortUrl(dto.getLink());
-        return ResponseEntity.created(URI.create(SLASH + shortUrl))
-                .body(new LinkResponseDto(baseUrl + SLASH + shortUrl));
+        final LinkResponseDto shortUrl = linkService.createShortUrl(dto.getLink(), baseUrl);
+        return ResponseEntity.created(URI.create(shortUrl.getLink()))
+                .body(shortUrl);
     }
 
     @GetMapping("{key}")

@@ -1,48 +1,61 @@
 package com.homework.musinsa.link.application;
 
+import com.homework.musinsa.link.domain.Link;
 import com.homework.musinsa.link.dto.LinkResponseDto;
 import com.homework.musinsa.link.infra.LinkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
 class LinkServiceTest {
+    private static final String ORIGINAL_LINK = "https://www.google.com";
+    private static final String KEY = "0f32a2f0";
 
-    @Autowired
-    private LinkRepository linkRepository;
+    private LinkRepository linkRepository = mock(LinkRepository.class);
+    private LinkResponseDto linkResponseDto;
 
     private LinkService linkService;
+    private Link link;
 
     @BeforeEach
     void setUp() {
         linkService = new LinkService(linkRepository);
+        linkResponseDto = new LinkResponseDto("4170157c", 0);
+
+        link = Link.generateLink(KEY, ORIGINAL_LINK);
     }
 
     @Test
     void createUrl() {
         // given
-        final String input = "https://www.google.com";
-
+        final String baseUrl = "http://localhost";
+        when(linkRepository.findById(anyString()))
+                .thenReturn(Optional.ofNullable(null));
+        when(linkRepository.save(any(Link.class)))
+                .thenReturn(link);
         // when
-        String shortUrl = linkService.createShortUrl(input);
+        LinkResponseDto shortUrl = linkService.createShortUrl(ORIGINAL_LINK, baseUrl);
+
         // then
-        assertThat(shortUrl.length()).isEqualTo(8);
+        assertThat(shortUrl.getLink()).isNotEqualTo(ORIGINAL_LINK);
     }
 
     @Test
     void findOriginalLink() {
         // given
-        final String input = "https://www.google.com";
-        String shortUrl = linkService.createShortUrl(input);
-
+        when(linkRepository.findById(anyString()))
+                .thenReturn(Optional.of(link));
         // when
-        LinkResponseDto actual = linkService.getOriginalLink(shortUrl);
+        LinkResponseDto actual = linkService.getOriginalLink(KEY);
 
         // then
-        assertThat(actual.getLink()).isEqualTo(input);
+        assertThat(actual.getLink()).isEqualTo(ORIGINAL_LINK);
     }
 }

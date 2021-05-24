@@ -18,24 +18,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class LinkService {
-    public static final String NOT_VALID_LINK_KEY = "잘못된 링크 입력입니다";
+    private static final String NOT_VALID_LINK_KEY = "잘못된 링크 입력입니다";
+    private static final String SLASH = "/";
     private final LinkRepository linkRepository;
 
     /**
-     * 단축 URL을 생성한다./
+     * 단축 URL을 생성한다.
      *
      * @param originalLink 원본 링크 정보
+     * @param baseUrl
      * @return 단축 링크 정보
      */
-    public String createShortUrl(final String originalLink) {
+    public LinkResponseDto createShortUrl(final String originalLink, String baseUrl) {
         final String id = Hashing.murmur3_32().hashString(originalLink, StandardCharsets.UTF_8).toString();
         Optional<Link> findLink = linkRepository.findById(id);
         if (findLink.isPresent()) {
             Link savedLink = linkRepository.save(findLink.get().updateCount());
-            return savedLink.getKey();
+            return new LinkResponseDto(savedLink, baseUrl);
         }
         final Link savedLink = linkRepository.save(Link.generateLink(id, originalLink));
-        return savedLink.getKey();
+        return new LinkResponseDto(savedLink, baseUrl);
     }
 
     /**
@@ -50,6 +52,6 @@ public class LinkService {
         }
         final Link link = linkRepository.findById(key)
                 .orElseThrow(() -> new LinkNotFoundException(NOT_VALID_LINK_KEY));
-        return new LinkResponseDto(link.getOriginalLink());
+        return new LinkResponseDto(link);
     }
 }

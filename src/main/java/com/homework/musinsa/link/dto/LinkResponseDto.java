@@ -1,5 +1,6 @@
 package com.homework.musinsa.link.dto;
 
+import com.homework.musinsa.link.domain.Link;
 import lombok.Getter;
 
 /**
@@ -7,9 +8,23 @@ import lombok.Getter;
  */
 @Getter
 public class LinkResponseDto {
-    private final String link;
+    public static final String SLASH = "/";
 
-    public LinkResponseDto(String link) {
+    private String link;
+    private int count;
+
+    public LinkResponseDto(String link, int count) {
         this.link = link;
+        this.count = count;
+    }
+
+    public LinkResponseDto(Link savedLink) {
+        this.link = savedLink.getOriginalLink();
+        this.count = savedLink.getCount();
+    }
+
+    public LinkResponseDto(Link savedLink, String baseUrl) {
+        this.link = baseUrl + SLASH + savedLink.getKey();
+        this.count = savedLink.getCount();
     }
 }

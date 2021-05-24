@@ -52,7 +52,7 @@ class LinkRestControllerTest {
 
             @BeforeEach
             void setUp() {
-                linkResponseDto = new LinkResponseDto(LINK_URL);
+                linkResponseDto = new LinkResponseDto(LINK_URL, 0);
                 key = SHORT_URL;
 
                 given(linkService.getOriginalLink(key))
@@ -98,9 +98,9 @@ class LinkRestControllerTest {
                 @BeforeEach
                 void setUp() {
                     requestDto = new LinkRequestDto(LINK_URL);
-                    responseDto = new LinkResponseDto(SHORT_URL);
-                    given(linkService.createShortUrl(anyString()))
-                            .willReturn(SHORT_URL);
+                    responseDto = new LinkResponseDto(SHORT_URL, 0);
+                    given(linkService.createShortUrl(anyString(), anyString()))
+                            .willReturn(responseDto);
                 }
 
                 @DisplayName("201 Created 상태를 응답한다.")
