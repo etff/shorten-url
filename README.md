@@ -24,23 +24,10 @@
 
 ### 개발 방향
 
-- RDB를 사용할 것인지, REDIS를 쓸 건지부터 고민을 했습니다.   
-  단축 URL 정보의 경우, 실제 서비스에서 만료일을 설정해서 일정 기간만 쓰기도 하고   
-  영속화하여 오래 보관할 정보는 아니라고 판단을 하였습니다.
-- RDB를 사용했을 때 떠올린 전략은 다음과 같습니다. 동일한 요청시 동일한 결과를 리턴하기위해
-  1. 원본 링크를 검색.
-  2. 조회가 되면 해당 정보 리턴.
-  3. 조회가 되지않으면 원본 URL을 저장하고 ID를 리턴.
-  4. ID를 인코딩(BASE62같은 인코딩) 사용하여 KEY를 만들고 업데이트
-  5. 키로 검색시에는 키값을 디코딩하여 검색
-- RDS 사용시, 원본 URL 길이가 데이터마다 일정하지 않고, 원본URL을 서칭하는것은 효율적이지 못하다고 생각했습니다.
-- REDIS를 쓴 것은 단축 URL을 빠르게 전달하는 것이 서비스의 가장 첫 목표라고 생각했기떄문입니다.
-- 동일한 키 값 보장을 위해 Hash 알고리즘을 고려하였습니다.
-- 키 생성은 murmur3 hash function을 사용했습니다. 서칭해본 결과 hash function
-  중에 [좋은 성능](https://docs.google.com/spreadsheets/d/1_q2EVcxA2HjcrlVMbaqXwMj31h9M5-Bqj_m8vITOwwk/edit#gid=0)
-  , [링크](https://www.sderosiaux.com/articles/2017/08/26/the-murmur3-hash-function--hashtables-bloom-filters-hyperloglog/)   
-  을 보이고, 자바 hashmap에서 사용하는 것처럼 실례에서 많이 쓰이는 hash 알고리즘입니다.
-- 키 제약사항이 적다면 길이를 더 길게하여 충돌을 줄일 수 있을 것 같습니다.
+- 빠른 조회를 위해 Redis 선택. 또한 Single Thread로 실행되기때문에 동시성 케이스 예방
+- 단축 URL 정보를 오래 영속화할 필요가 없다고 판단함
+- 키 생성 전략은 MD5 해싱한 값의 SUBSTRING한 8자로 생성. 중복이 발생하는 케이스가 매우 적음.
+- 대용량에서 처리를 해야한다면 Zoo Keeper 같은 툴을 통해 DB 의 키 관리를 전담하며, 해당키를 BASE62 인코딩하는 방식으로 전환
 
 ## REST API
 
