@@ -24,7 +24,7 @@ public class MD5Generator {
             e.printStackTrace();
             MD5 = null;
         }
-        return MD5;
+        return subString(MD5);
     }
 
     private static String subString(String word) {
